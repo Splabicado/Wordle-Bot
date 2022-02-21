@@ -22,8 +22,10 @@ public class Main
 		
 		// tells user how to use the program
 		System.out.println("Use 'has (letter)' to take out any words without that letter.");
-		System.out.println("Use 'letter at (position) is (letter)' to take out any words without that letter at that spot");
+		System.out.println("Use 'letter at (position) is (letter)' to take out any words without that letter at that position");
 		System.out.println("Use 'doesnt have (letter)' to take out any words with that letter");
+		System.out.println("Use 'letter at (position) is not (letter)' to take out any words with that letter in that position");
+		System.out.println("Use 'wordlist' to print the current wordlist");
 		System.out.println("Use 'retry' to refill the list");
 		System.out.println("Use 'stop' to stop the program");
 		System.out.println("Inputs must be exactly the same as the syntax states (dont do 'hAs'(retard)), any letters in the (letter) positions must be capitalized, anything in the (number) position must be a number between 1 and 5. Failure to comply will result in you being called an idiot.");
@@ -56,10 +58,24 @@ public class Main
 		        typedRight = true;
 		    }
 		    
-		    if (input.length()>10 && input.substring(0,10).equals("letter at ") && alphabet.contains(input.substring(input.length()-1)) && numbers.contains(input.substring(11,12)))
+		    if (input.length()>10 && input.length()<17 && input.substring(0,10).equals("letter at ") && alphabet.contains(input.substring(input.length()-1)) && numbers.contains(input.substring(10,11)))
 		    {
 		        int number = Integer.parseInt(input.substring(10,11));
 		        wordList = letterAt(wordList, number, input.substring(input.length()-1));
+		        System.out.println(wordList);
+		        typedRight = true;
+		    }
+		    
+		    if (input.length()>17 && input.substring(0,10).equals("letter at ") && alphabet.contains(input.substring(input.length()-1)) && numbers.contains(input.substring(10,11)))
+		    {
+		        int number = Integer.parseInt(input.substring(10,11));
+		        wordList = letterAtIsNot(wordList, number, input.substring(input.length()-1));
+		        System.out.println(wordList);
+		        typedRight = true;
+		    }
+		    
+		    if (input.equals("wordlist"))
+		    {
 		        System.out.println(wordList);
 		        typedRight = true;
 		    }
@@ -87,9 +103,13 @@ public class Main
 	    ArrayList<String> result = new ArrayList<String>();
 	    for (int i = 0; i<list.size(); i++)
 	    {
-	        for (int o = 0; o<list.get(i).length(); o++)
+	        if (list.get(i).contains(","))
 	        {
-	            if (list.get(i).substring(o,o+1).equals(chr))
+	            
+	        }
+	        else
+	        {
+	            if (list.get(i).contains(chr))
 	            {
 	                result.add(list.get(i));
 	            }
@@ -126,8 +146,22 @@ public class Main
 	    }
 	    return result;
 	}
-	// removes spaces from original string because im too lazy to do it manually
 	
+	public static ArrayList<String> letterAtIsNot(ArrayList<String> list, int location, String ltr)
+	{
+	    location-=1;
+	    ArrayList<String> result = list;
+	    for (int i = 0; i<list.size(); i++)
+	    {
+	        if (list.get(i).substring(location, location+1).equals(ltr))
+	        {
+	            result.remove(i);
+	        }
+	    }
+	    return result;
+	}
+	
+	// removes spaces from original string because im too lazy to do it manually
 	public static String spaceRemove(String str)
 	{
 	    for (int i = 0; i<=str.length()-1; i++)
