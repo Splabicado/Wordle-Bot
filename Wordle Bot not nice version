@@ -16,9 +16,13 @@ public class Main
 		String wordListString = str+str2+str3;
 		String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 		String numbers = "12345";
+		
 		// arraylist that holds all of the words
 		ArrayList<String> wordList = new ArrayList<String>();
 		wordList = makeList(wordList, wordListString);
+		
+		//backup list for back 1
+		ArrayList<String> backup = new ArrayList<String>();
 		
 		// tells user how to use the program
 		System.out.println("Use 'has (letter)' to take out any words without that letter.");
@@ -28,33 +32,36 @@ public class Main
 		System.out.println("Use 'wordlist' to print the current wordlist");
 		System.out.println("Use 'retry' to refill the list");
 		System.out.println("Use 'stop' to stop the program");
+		System.out.println("Use 'back 1' to go back 1 step");
 		System.out.println("Inputs must be exactly the same as the syntax states (dont do 'hAs'(retard)), any letters in the (letter) positions must be capitalized, anything in the (number) position must be a number between 1 and 5. Failure to comply will result in you being called an idiot.");
 		
 		//main loop
 		while (true)
 		{
+		    
+		    //sets up backup list for back 1
+		    backup = wordList;
+		    
 		    //user input string
 		    String input = scan.nextLine();
 		    
+		    //check for if the user input is functional
 		    boolean typedRight = false;
 		    
 		    if (input.equals("stop"))
 		    {
-		        //forgive me mr ebbert
 		        throw new Error("code stopped");
 		    }
 		    
 		    if (input.length()>3 && input.substring(0,4).equals("has ") && alphabet.contains(input.substring(input.length()-1)))
 		    {
 		        wordList = has(wordList, input.substring(input.length()-1));
-		        System.out.println(wordList);
 		        typedRight = true;
 		    }
 		    
 		    if (input.length()>12 && input.substring(0,12).equals("doesnt have ") && alphabet.contains(input.substring(input.length()-1)))
 		    {
 		        wordList = doesntHave(wordList, input.substring(input.length()-1));
-		        System.out.println(wordList);
 		        typedRight = true;
 		    }
 		    
@@ -62,28 +69,31 @@ public class Main
 		    {
 		        int number = Integer.parseInt(input.substring(10,11));
 		        wordList = letterAt(wordList, number, input.substring(input.length()-1));
-		        System.out.println(wordList);
 		        typedRight = true;
 		    }
 		    
+		    //dysfunctional
 		    if (input.length()>17 && input.substring(0,10).equals("letter at ") && alphabet.contains(input.substring(input.length()-1)) && numbers.contains(input.substring(10,11)))
 		    {
 		        int number = Integer.parseInt(input.substring(10,11));
 		        wordList = letterAtIsNot(wordList, number, input.substring(input.length()-1));
-		        System.out.println(wordList);
 		        typedRight = true;
 		    }
 		    
 		    if (input.equals("wordlist"))
 		    {
-		        System.out.println(wordList);
 		        typedRight = true;
 		    }
 		    
 		    if (input.equals("retry"))
 		    {
 		        wordList = makeList(wordList, wordListString);
-		        System.out.println(wordList);
+		        typedRight = true;
+		    }
+		    
+		    if (input.equals("back 1"))
+		    {
+		        wordList = backup;
 		        typedRight = true;
 		    }
 		    
@@ -91,6 +101,9 @@ public class Main
 		    {
 		        System.out.println("YOU IDIOT!!!! type it in right");
 		    }
+		    
+		    // activation
+		    System.out.println(wordList);
 		    
 		}
 	}
