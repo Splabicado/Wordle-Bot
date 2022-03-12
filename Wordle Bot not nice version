@@ -28,7 +28,6 @@ public class Main
 		System.out.println("Use 'has (letter)' to take out any words without that letter.");
 		System.out.println("Use 'letter at (position) is (letter)' to take out any words without that letter at that position");
 		System.out.println("Use 'doesnt have (letter)' to take out any words with that letter");
-		System.out.println("Use 'letter at (position) is not (letter)' to take out any words with that letter in that position");
 		System.out.println("Use 'wordlist' to print the current wordlist");
 		System.out.println("Use 'retry' to refill the list");
 		System.out.println("Use 'stop' to stop the program");
