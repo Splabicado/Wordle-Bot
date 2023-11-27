@@ -26,18 +26,13 @@ public class Main
 		ArrayList<String> wordList = new ArrayList<String>();
 		wordList = makeList(wordList, wordListString);
 		
-		//backup list for back 1
-		ArrayList<ArrayList<String>> backup = new ArrayList<ArrayList<String>>();
-		backup.add(wordList);
-		
 		// tells user how to use the program
 		System.out.println("Use 'has (letter)' to take out any words without that letter.");
 		System.out.println("Use 'letter at (position) is (letter)' to take out any words without that letter at that position");
-		System.out.println("Use 'doesnt have (letter)' to take out any words with that letter");
+		System.out.println("Use 'no (letter)' to take out any words with that letter");
 		System.out.println("Use 'wordlist' to print the current wordlist");
 		System.out.println("Use 'retry' to refill the list");
 		System.out.println("Use 'stop' to stop the program");
-		System.out.println("Use 'back 1' to go back 1 step");
 		System.out.println("Inputs must be exactly the same as the syntax states (dont do 'hAs'), any letters in the (letter) positions must be capitalized, anything in the (number) position must be a number between 1 and 5.");
 		
 		//main loop
@@ -45,12 +40,6 @@ public class Main
 		{
             //user input string
             String input = scan.nextLine();
-            
-            //sets up backup list for back 1. fix this shit annoying fucking ucking uckignfcig f key borken
-            if (backup.get(backup.size()-1).equals(wordList))
-            {
-                backup.add(wordList);
-            }
             
             //check for if the user input is functional
             boolean typedRight = false;
@@ -66,16 +55,23 @@ public class Main
 		        typedRight = true;
 		    }
 		    
-		    if (input.indexOf("doesnt have ")!=-1 && alphabet.contains(input.substring(input.length()-1)))
+		    if (input.indexOf("no ")!=-1 && alphabet.contains(input.substring(input.length()-1)))
 		    {
 		        wordList = doesntHave(wordList, input.substring(input.length()-1));
 		        typedRight = true;
 		    }
 		    
-		    if (input.indexOf("letter at ")!=-1 && input.indexOf("not")==-1 && alphabet.contains(input.substring(input.length()-1)) && numbers.contains(input.substring(10,11)))
+		    if (input.indexOf("letter at ")!=-1 && alphabet.contains(input.substring(input.length()-1)) && numbers.contains(input.substring(10,11)))
 		    {
 		        int number = Integer.parseInt(input.substring(10,11));
-		        wordList = letterAt(wordList, number, input.substring(input.length()-1));
+		        if (input.indexOf("not")==-1)
+		        {
+		            wordList = letterAt(wordList, number, input.substring(input.length()-1));
+		        }
+		        else
+		        {
+		            wordList = letterAtIsNot(wordList, number, input.substring(input.length()-1));
+		        }
 		        typedRight = true;
 		    }
 		    
@@ -90,26 +86,14 @@ public class Main
 		        typedRight = true;
 		    }
 		    
-		    if (input.equals("print backup"))
+		    if (typedRight)
 		    {
-		        System.out.println(backup);
-		        typedRight = true;
-		    }
-		    
-		    if (input.equals("back 1"))
-		    {
-		        wordList = backup.get(backup.size()-1);
-		        backup.remove(backup.size()-1);
-		        typedRight = true;
-		    }
-		    
-		    if (!typedRight)
-		    {
-		        System.out.println("you typed something in wrong");
+		        System.out.println(wordList);
+		        
 		    }
 		    else
 		    {
-		        System.out.println(wordList);
+		        System.out.println("you typed something in wrong");
 		    }
 		}
 	}
@@ -142,20 +126,6 @@ public class Main
 	    }
 	    return result;
 	}
-
-    //removes any word that doesnt have the specified letter
-	public static ArrayList<String> doesntHave(ArrayList<String> list, String ltr)
-	{
-	    ArrayList<String> result = new ArrayList<String>();
-	    for (int i = 0; i<list.size(); i++)
-	    {
-	        if (!(list.get(i).contains(ltr)))
-	        {
-	            result.add(list.get(i));
-	        }
-	    }
-	    return result;
-	}
 	
 	// removes any entries with a given letter at a given location
 	public static ArrayList<String> letterAtIsNot(ArrayList<String> list, int location, String ltr)
@@ -165,6 +135,20 @@ public class Main
 	    for (int i = 0; i<list.size(); i++)
 	    {
 	        if (!list.get(i).substring(location, location+1).equals(ltr))
+	        {
+	            result.add(list.get(i));
+	        }
+	    }
+	    return result;
+	}
+
+    //removes any word that doesnt have the specified letter
+	public static ArrayList<String> doesntHave(ArrayList<String> list, String ltr)
+	{
+	    ArrayList<String> result = new ArrayList<String>();
+	    for (int i = 0; i<list.size(); i++)
+	    {
+	        if (!(list.get(i).contains(ltr)))
 	        {
 	            result.add(list.get(i));
 	        }
