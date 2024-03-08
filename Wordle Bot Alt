@@ -42,7 +42,7 @@ public class Main
 		    {
 		        typedRight = true;
 		    }
-		    else if (input.equals("retry"))
+		    else if (input.equals("back 1"))
 		    {
 		        wordList = backup;
 		        typedRight = true;
@@ -83,6 +83,8 @@ public class Main
 		    {
 		        System.out.println("you typed something in wrong");
 		    }
+		    
+		    backup = wordList;
 		}
 	}
 	
@@ -191,6 +193,6 @@ public class Main
 	            index = i;
 	        }
 	    }
-	    return list.get(index);
+	    return (list.size()>0?list.get(index):"error");
 	}
 }
