@@ -2,119 +2,73 @@ package wordleBot;
 import java.io.*;
 import java.util.*;
 
-public class Main 
+public class ListOperators 
 {
-	static File dictionaryFile; 
-	static String dictionaryString;
-	static Scanner fileScan;
-	static Scanner inputScan;
-	static ListOperators operators;
-	static ArrayList<String> wordList;
-	static ArrayList<String> backup;
-	
-	public static void main(String[] args) throws FileNotFoundException
+	// removes any entries without chr
+	public ArrayList<String> has(ArrayList<String> list, char chr)
 	{
-		operators = new ListOperators();
-		dictionaryFile = new File("dictionary.txt");
-		fileScan = new Scanner(dictionaryFile);
-		inputScan = new Scanner(System.in);
-		dictionaryString = fileScan.nextLine();
-		wordList = operators.makeList(dictionaryString);
-		backup = wordList;
-		
-		// tells user how to use the program
-		System.out.println("Use 'wordlist' to print the current wordlist");
-		System.out.println("Use 'retry' to refill the list");
-		System.out.println("Use 'stop' to stop the program");
-		System.out.println("Inputs must be in the form xy xy xy xy xy, where x is the letter at that space and y is the color. B is grey/black, Y is yellow, and G is green.Both the letter and the color can be in upper or lower case");
-				
-		while (true)
-		{
-		    System.out.println("Bot reccomends: "+reccomendWord(wordList));
-		    
-            //user input string
-            String input = inputScan.nextLine();
-            
-            backup = wordList;
-            
-            //check for if the user input is functional
-            boolean typedRight = true;
-            
-            switch (input)
-            {
-            	case ("stop"):
-            		throw new Error("code stopped");
-            		
-            	case ("wordList"):
-            		typedRight = true;
-            		break;
-            		
-            	case ("back 1"):
-            		wordList = backup;
-    		        typedRight = true;
-            		break;
-            		
-            	default:
-            		int index = 1;
-    		        for (int i = 0; i<input.length(); i+=3)
-    		        {
-    		            char ltr = input.substring(i,i+1).toUpperCase().charAt(0);
-    		            char clr = input.substring(i+1,i+2).toUpperCase().charAt(0);
-    		            if (clr=='G')
-    		            {
-    		            	wordList = operators.letterAtIs(wordList, index-1,ltr);
-    		            }
-    		            else if (clr=='Y')
-    		            {
-    		            	wordList = operators.has(wordList,ltr);
-    		            	wordList = operators.letterAtIsNot(wordList,index-1,ltr);
-    		            }
-    		            else if (clr=='B')
-    		            {
-    		            	wordList = operators.doesntHave(wordList, ltr);
-    		            }
-    		            else
-    		            {
-    		                typedRight = false;
-    		            }
-    		            index++;
-    		        }
-            }
-		    
-		    if (typedRight)
-		    {
-		        System.out.println(wordList);
-		    }
-		    else
-		    {
-		        System.out.println("you typed something in wrong");
-		    }
-		}
-	}
-	
-	public static String reccomendWord(ArrayList<String> list)
-	{
-	    String vowels = "AEIOUY";
-	    int index = 0;
-	    int max = 0;
+		ArrayList<String> result = new ArrayList<String>();
 	    for (int i = 0; i<list.size(); i++)
 	    {
-	        int num = 0;
-	        String used = "";
-	        for (int u = 0; u<list.get(i).length(); u++)
-	        {
-	            if (vowels.indexOf(list.get(i).charAt(u))!=-1 && used.indexOf(list.get(i).charAt(u))==-1)
-	            {
-	                num++;
-	            }
-	            used+=list.get(i).charAt(u);
-	        }
-	        if (num>max)
-	        {
-	            max = num;
-	            index = i;
-	        }
+	    	String word = list.get(i);
+	    	if (word.indexOf(chr)!=-1)
+	    	{
+	    		result.add(word);
+	    	}
 	    }
-	    return (list.size()>0?list.get(index):"error");
+	    return result;
 	}
+	
+	public ArrayList<String> doesntHave(ArrayList<String> list, char chr)
+	{
+		ArrayList<String> result = new ArrayList<String>();
+	    for (int i = 0; i<list.size(); i++)
+	    {
+	    	String word = list.get(i);
+	    	if (word.indexOf(chr)==-1)
+	    	{
+	    		result.add(word);
+	    	}
+	    }
+	    return result;
+	}
+	
+	public ArrayList<String> letterAtIs(ArrayList<String> list, int index, char chr)
+	{
+		ArrayList<String> result = new ArrayList<String>();
+	    for (int i = 0; i<list.size(); i++)
+	    {
+	    	String word = list.get(i);
+	    	if (word.charAt(index)==chr)
+	    	{
+	    		result.add(word);
+	    	}
+	    }
+	    return result;
+	}
+	
+	public ArrayList<String> letterAtIsNot(ArrayList<String> list, int index, char chr)
+	{
+		ArrayList<String> result = new ArrayList<String>();
+	    for (int i = 0; i<list.size(); i++)
+	    {
+	    	String word = list.get(i);
+	    	if (word.charAt(index)!=chr)
+	    	{
+	    		result.add(word);
+	    	}
+	    }
+	    return result;
+	}
+	
+	public ArrayList<String> makeList(String str)
+	{
+		ArrayList<String> result = new ArrayList<String>();
+		for (int i = 0; i<str.length()-6; i+=6)
+		{
+			result.add(str.substring(i,i+6));
+		}
+		return result;
+	}
+	
 }
